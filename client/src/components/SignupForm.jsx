@@ -1,7 +1,10 @@
 import { useState } from 'react';
+// We import the useMutation hook from @apollo/client
+import { useMutation } from '@apollo/client';
 import { Form, Button, Alert } from 'react-bootstrap';
 
-import { createUser } from '../utils/API';
+// import { createUser } from '../utils/API';
+import { ADD_USER } from '../utils/mutation';
 import Auth from '../utils/auth';
 
 const SignupForm = () => {
@@ -12,6 +15,8 @@ const SignupForm = () => {
   // set state for alert
   const [showAlert, setShowAlert] = useState(false);
 
+  const [addUser, { error, data }] = useMutation(ADD_USER);
+
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setUserFormData({ ...userFormData, [name]: value });
@@ -19,6 +24,7 @@ const SignupForm = () => {
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
+    console.log(userFormData);
 
     // check if form has everything (as per react-bootstrap docs)
     const form = event.currentTarget;
@@ -28,19 +34,25 @@ const SignupForm = () => {
     }
 
     try {
-      const response = await createUser(userFormData);
+      const { data } = await addUser({
+        variables: { ...userFormData }
+      });
 
-      if (!response.ok) {
-        throw new Error('something went wrong!');
-      }
+      // if (!response.ok) {
+      //   throw new Error('something went wrong!');
+      // }
 
-      const { token, user } = await response.json();
-      console.log(user);
-      Auth.login(token);
+      // const { token, user } = await response.json();
+      console.log('GraphQL Mutation response:', data);
+      Auth.login(data.addUser.token);
     } catch (err) {
-      console.error(err);
+      console.error('GraphQL Mutation error:', err);
       setShowAlert(true);
+      console.log('GraphQL Mutation error details:', err.message);
+      console.log('GraphQL Mutation graphQLErrors:', err?.graphQLErrors);
     }
+
+    console.log('Form submission completed');
 
     setUserFormData({
       username: '',
