@@ -56,18 +56,22 @@ const resolvers = {
             console.error('Error saving book:', error);
             throw new Error('Failed to save book');
           }
-            }
-  }
+            },
+        removeBook: async (parent, { bookId }, context) => {
+              if (context.user) {
+                const updatedUser = await User.findOneAndUpdate(
+                  { _id: context.user._id },
+                  { $pull: { savedBooks: { bookId: bookId } } },
+                  { new: true }
+                );
+        
+                return updatedUser;
+              }
+              throw new AuthenticationError('User not authenticated');
+            },
+        }
 };
 
-// removeSkill: async (parent, { profileId, skill }) => {
-//   return Profile.findOneAndUpdate(
-//     { _id: profileId },
-//     { $pull: { skills: skill } },
-//     { new: true }
-//   );
-// },
 
-//save book will need context - look at act 25 resolvers
 
 module.exports = resolvers;
