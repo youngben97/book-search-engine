@@ -3,12 +3,13 @@ import { gql } from '@apollo/client';
 
 // Important for useQuery: Each query we'd like to be able to perform gets exported out of our queries.js utility
 export const GET_ME = gql`
-    query me($meId: ID!) {
-  me(id: $meId) {
+query me{
+  me {
     _id
     username
-    email
     bookCount
+    email
+    password
     savedBooks {
       bookId
       authors
