@@ -1,6 +1,8 @@
 import { useState } from 'react';
 // Important for useQuery: We import the useQuery hook from @apollo/client
 import { useQuery } from '@apollo/client';
+// import useMutation
+// import { useMutation } from '@apollo/client';
 import { useParams } from 'react-router-dom';
 
 import {
@@ -14,6 +16,7 @@ import {
 // import { getMe, deleteBook } from '../utils/API';
 // Import the query we are going to execute from its file
 import { GET_ME } from '../utils/queries';
+// import { REMOVE_BOOK } from '../utils/mutation';
 import Auth from '../utils/auth';
 import { removeBookId } from '../utils/localStorage';
 
@@ -24,7 +27,7 @@ const SavedBooks = () => {
     variables: { meId: meId },
   });
 
-  const me = data?.savedBooks || [];
+  const me = data?.me || [];
 
   // use this to determine if `useEffect()` hook needs to run again
   // const userDataLength = Object.keys(userData).length;
