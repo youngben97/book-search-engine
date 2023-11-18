@@ -23,7 +23,7 @@ type Auth {
 }
 
 type Query {
-    me(meId: ID!): User
+    me: User
 }
 
 input BookInput {
